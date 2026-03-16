@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Mingbuloq Ijara</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body id="body">
+    <div class="container">
+        <header>
+            <h1>Mingbuloq Ijara Tizimi</h1>
+            <button onclick="toggleMode()">🌙/☀️ Rejim</button>
+        </header>
+
+        {% if not session.get('admin') %}
+        <form action="/login" method="post" class="login-form">
+            <input type="text" name="username" placeholder="Login" required>
+            <input type="password" name="password" placeholder="Parol" required>
+            <button type="submit">Admin bo'lib kirish</button>
+        </form>
+        {% else %}
+        <p>Xush kelibsiz, Admin! <a href="/logout">Chiqish</a></p>
+        <fieldset>
+            <legend>Yangi ijara qo'shish</legend>
+            <form action="/add" method="post">
+                <input type="text" name="uy_egasi" placeholder="Uy egasi" required>
+                <input type="text" name="manzil" placeholder="Manzil" required>
+                <input type="text" name="narxi" placeholder="Narxi" required>
+                <input type="text" name="tel" placeholder="Telefon" required>
+                <button type="submit">Qo'shish</button>
+            </form>
+        </fieldset>
+        {% endif %}
+
+        <hr>
+        <div class="ijara-list">
+            {% for ijara in ijaralar %}
+            <div class="card">
+                <h3>{{ ijara.manzil }}</h3>
+                <p>Egasi: {{ ijara.uy_egasi }}</p>
+                <p>Narxi: {{ ijara.narxi }}</p>
+                <p>Tel: {{ ijara.tel }}</p>
+                {% if session.get('admin') %}
+                <a href="/delete/{{ ijara.id }}" style="color:red">O'chirish</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function toggleMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+</body>
+</html>
